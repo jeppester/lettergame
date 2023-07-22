@@ -73,7 +73,7 @@ export default class RandomModeScreen extends ViewList {
     const emphasizeScale = 2
 
     this.letterButtons.map((button) => button.disabled = true)
-    this.moveToFront(button)
+    this.letterButtons.moveToFront(button)
     this.letterList.add(gameContext, button.letter)
 
     const boxScale = Math.max(width, height) / (emphasizeScale * (button.size - theme.button.borderWidth))
