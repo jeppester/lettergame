@@ -1,5 +1,6 @@
 import ViewList from '../../engine/ViewList.js'
 import LetterButton from '../../shared/LetterButton.js'
+import Trophy from '../../shared/Trophy.js'
 import LetterList from './LetterList.js'
 import spliceRandom from '../../utils/spliceRandom.js'
 import playAudio from '../../utils/playAudio.js'
@@ -16,11 +17,13 @@ export default class AlphabeticalModeScreen extends ViewList {
     this.empty()
 
     this.padding = 20
-    this.letterButtons = []
-    this.availableLetters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ"]
+    this.letterButtons = new ViewList()
+    this.availableLetters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ"] // .slice(0,5)
     this.allLetters = this.availableLetters.slice()
 
     this.letterList = new LetterList()
+    this.trophy = new Trophy(gameContext, this.allLetters.length)
+
     const initialLetters = this.pickButtonLetters()
     for (let i = 0; i < 3; i ++) {
       let letter = initialLetters[i]
@@ -29,7 +32,7 @@ export default class AlphabeticalModeScreen extends ViewList {
       this.letterButtons.push(new LetterButton({ letter, onClick, position }))
     }
 
-    this.push(...this.letterButtons, this.letterList)
+    this.push(this.letterButtons, this.letterList, this.trophy)
     this.resize(gameContext)
 
     const { animator } = gameContext
@@ -70,9 +73,8 @@ export default class AlphabeticalModeScreen extends ViewList {
     const { animator, assetLoader, audioContext, width, height } = gameContext
     const emphasizeScale = 2
 
-    this.letterButtons.map((button) => button.disabled = true)
-    this.moveToFront(button)
-    this.moveToFront(this.letterList)
+    this.letterButtons.forEach((button) => button.disabled = true)
+    this.letterButtons.moveToFront(button)
     this.letterList.add(gameContext, button.letter)
 
     const boxScale = Math.max(width, height) / (emphasizeScale * (button.size - theme.button.borderWidth))
@@ -106,10 +108,13 @@ export default class AlphabeticalModeScreen extends ViewList {
       .wait(200)
       .start()
 
+    await this.trophy.advance(gameContext)
+
     this.resize(gameContext)
     this.availableLetters.shift()
     if (this.availableLetters.length > 0) {
       const nextLetters = this.pickButtonLetters()
+      const delays = [0, 200, 100]
 
       this.letterButtons.map((button, i) => {
         button.letter = nextLetters[i]
@@ -120,8 +125,6 @@ export default class AlphabeticalModeScreen extends ViewList {
         button.boxScale = 1
         button.disabled = true
         button.state = "normal"
-
-        const delays = [0, 200, 100]
         animator.animate(button)
           .wait(delays[i])
           .tween({ scaleX: { to: 1 }}, 300, animator.easeOutCubic)
@@ -132,7 +135,7 @@ export default class AlphabeticalModeScreen extends ViewList {
       })
     }
     else {
-      this.endGame(gameContext)
+      this.trophy.celebrate(gameContext, () => this.endGame(gameContext))
     }
   }
 
@@ -145,8 +148,7 @@ export default class AlphabeticalModeScreen extends ViewList {
         otherButton.state = "muted"
       }
     })
-    this.moveToFront(button)
-    this.moveToFront(this.letterList)
+    this.letterButtons.moveToFront(button)
     button.state = "incorrect"
 
     await Promise.all([
@@ -229,7 +231,15 @@ export default class AlphabeticalModeScreen extends ViewList {
     animator.cancelKey('current-letter-payback')
   }
 
-  endGame(gameContext) {
+  async endGame(gameContext) {
+    const { animator, width, height } = gameContext
+    const isLandscape = width > height
+
+    await animator
+      .animate(this)
+      .tween({ [isLandscape ? 'scaleX' : 'scaleY']: 0 }, 400, animator.easeInCubic)
+      .start()
+
     gameContext.mainViewList.removeChild(this)
     gameContext.mainViewList.push(new ModeSelectionScreen(gameContext))
   }

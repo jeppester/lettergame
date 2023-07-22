@@ -1,5 +1,6 @@
 import ViewList from '../../engine/ViewList.js'
 import LetterButton from '../../shared/LetterButton.js'
+import Trophy from '../../shared/Trophy.js'
 import LetterList from './LetterList.js'
 import spliceRandom from '../../utils/spliceRandom.js'
 import playAudio from '../../utils/playAudio.js'
@@ -16,10 +17,12 @@ export default class RandomModeScreen extends ViewList {
     this.empty()
 
     this.padding = 20
-    this.letterButtons = []
-    this.availableLetters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ"]
+    this.letterButtons = new ViewList()
+    this.availableLetters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ"] // .slice(0,5)
 
     this.letterList = new LetterList(this.availableLetters.slice())
+    this.trophy = new Trophy(gameContext, this.availableLetters.length)
+
     for (let i = 0; i < 3; i ++) {
       let letter = spliceRandom(this.availableLetters)
       let position = i
@@ -27,7 +30,7 @@ export default class RandomModeScreen extends ViewList {
       this.letterButtons.push(new LetterButton({ letter, onClick, position }))
     }
 
-    this.push(...this.letterButtons, this.letterList)
+    this.push(this.letterButtons, this.letterList, this.trophy)
     this.resize(gameContext)
 
     const { animator } = gameContext
@@ -71,7 +74,6 @@ export default class RandomModeScreen extends ViewList {
 
     this.letterButtons.map((button) => button.disabled = true)
     this.moveToFront(button)
-    this.moveToFront(this.letterList)
     this.letterList.add(gameContext, button.letter)
 
     const boxScale = Math.max(width, height) / (emphasizeScale * (button.size - theme.button.borderWidth))
@@ -89,14 +91,25 @@ export default class RandomModeScreen extends ViewList {
           boxScale
         }, 400, animator.easeInOutCubic)
         .start()
-    ]).then(() =>
-      animator
-        .animate(button)
-        .wait(200)
-        .tween({ opacity: 0, scaleX: 6, scaleY: 6 }, 300, animator.easeOutCubic)
-        .wait(200)
-        .start()
-    )
+    ])
+
+    const hideOtherButtons = this.trophy.getWillAwardPieceNext()
+    if (hideOtherButtons) {
+      this.letterButtons.map((otherButton) => {
+        if (button === otherButton) return
+
+        otherButton.scaleX = 0
+      })
+    }
+
+    await animator
+      .animate(button)
+      .wait(200)
+      .tween({ opacity: 0, scaleX: 6, scaleY: 6 }, 300, animator.easeOutCubic)
+      .wait(200)
+      .start()
+
+    await this.trophy.advance(gameContext)
 
     // We recalculate all button positions,
     // the screen size might have changed during the animation
@@ -116,8 +129,17 @@ export default class RandomModeScreen extends ViewList {
         .start()
     }
     else {
-      this.removeChild(button)
-      this.letterButtons.splice(this.letterButtons.indexOf(button), 1)
+      this.letterButtons.removeChild(button)
+    }
+
+    if (hideOtherButtons) {
+      const otherButtons = this.letterButtons.filter(otherButton => otherButton !== button)
+      await Promise.all(otherButtons.map((otherButton, i) =>
+        animator.animate(otherButton)
+          .wait(i * 100)
+          .tween({ scaleX: { to: 1 }}, 300, animator.easeOutCubic)
+          .start()
+      ))
     }
 
     if (this.letterButtons.length !== 0) {
@@ -125,7 +147,7 @@ export default class RandomModeScreen extends ViewList {
       this.letterButtons.map((button) => button.disabled = false)
     }
     else {
-      this.endGame(gameContext)
+      this.trophy.celebrate(gameContext, () => this.endGame(gameContext))
     }
   }
 
@@ -139,7 +161,6 @@ export default class RandomModeScreen extends ViewList {
       }
     })
     this.moveToFront(button)
-    this.moveToFront(this.letterList)
     button.state = "incorrect"
 
     await Promise.all([
