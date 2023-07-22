@@ -1,3 +1,5 @@
+import deepClone from "../utils/deepClone.js"
+
 function joinCallbacks(...callbacks) {
   return () => {
     return callbacks.reduce((chain, callback) => {
@@ -56,5 +58,28 @@ export default class AnimationBuilder {
 
       this.animator.push(this.tweens[0])
     })
+  }
+
+  clone() {
+    const clone = new AnimationBuilder(this.animator, this.target)
+    clone.tweens = this.tweens.map(tween => ({
+      ...tween,
+      values: deepClone(tween.values)
+    }))
+    return clone
+  }
+
+  async loop(times = Infinity, onFulfilled) {
+    if (times === Infinity && onFulfilled) {
+      throw new Error('onFulfilled cannot be used with an infinite looping animation')
+    }
+
+    while (times > 0) {
+      const clone = this.clone()
+      await clone.start()
+      times --
+    }
+
+    if (onFulfilled) await onFulfilled()
   }
 }
