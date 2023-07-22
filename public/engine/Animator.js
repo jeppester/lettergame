@@ -59,11 +59,14 @@ export default class Animator {
 
       // Set start time, and start values for each animation
       tween.startTime = this.time
-      Object.entries(tween.values).forEach(([name, options]) => {
-        if (typeof options !== "object") {
-          tween.values[name] = { to: options }
-        }
-      })
+
+      if (typeof tween.values !== 'function') {
+        Object.entries(tween.values).forEach(([name, options]) => {
+          if (typeof options !== "object") {
+            tween.values[name] = { to: options }
+          }
+        })
+      }
 
       // Set default easing function
       if (!tween.ease) tween.ease = this.easeLinear
@@ -81,13 +84,24 @@ export default class Animator {
       const aDT = this.time - tween.startTime
       const t = Math.min(aDT / tween.duration, 1)
       const tEased = tween.ease(t)
-      Object.entries(tween.values).forEach(([name, options]) => {
-        if (options.from === undefined) options.from = tween.target[name]
-        if (options.to === undefined) options.to = tween.target[name]
 
-        const dv = options.to - options.from
-        tween.target[name] = options.from + dv * tEased
-      })
+      if (typeof tween.values === 'function') {
+        const values = tween.values(tEased)
+        if (values) {
+          Object.entries(values).forEach(([name, value]) => {
+            tween.target[name] = value
+          })
+        }
+      }
+      else {
+        Object.entries(tween.values).forEach(([name, options]) => {
+          if (options.from === undefined) options.from = tween.target[name]
+          if (options.to === undefined) options.to = tween.target[name]
+
+          const dv = options.to - options.from
+          tween.target[name] = options.from + dv * tEased
+        })
+      }
 
       if (t === 1) {
         dropTweens.push(tween)
