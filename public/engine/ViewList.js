@@ -36,12 +36,19 @@ export default class ViewList {
   }
 
   removeChild(child) {
-    this.children = this.children.filter(other => other !== child)
+    const filtered = this.children.filter(other => other !== child)
+    const childWasRemoved = filtered.length !== this.children.length
+    this.children = filtered
+    return childWasRemoved
   }
 
   moveToFront(child) {
-    this.removeChild(child)
-    this.push(child)
+    if (this.removeChild(child)) {
+      this.push(child)
+    }
+    else {
+      throw new Error('Cannot move non-child to front')
+    }
   }
 
   handleEvent(event) {
