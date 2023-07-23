@@ -11,22 +11,30 @@ export default class ModeSelectionScreen extends ViewList {
     this.removeChild(this.progressBar)
 
     this.modeButtons = [
-      new StartButton(this.handleStartGame.bind(this, gameContext, AlphabeticalModeScreen), 'ABCD'),
-      new StartButton(this.handleStartGame.bind(this, gameContext, RandomModeScreen), 'GTBS')
-    ]
+      [AlphabeticalModeScreen, "ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ", 'ABCD'],
+      [RandomModeScreen,       "ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ", 'AÅØB'],
+      [AlphabeticalModeScreen, "abcdefghijklmnopqrstuvwxyzæøå", 'abcd'],
+      [RandomModeScreen,       "abcdefghijklmnopqrstuvwxyzæøå", 'aåøb'],
+    ].map(([GameModeClass, availableLettersString, buttonText]) => {
+      const getGameMode = () => new GameModeClass(gameContext, availableLettersString)
+      const startCallback = () => this.handleStartGame(gameContext, getGameMode)
+      return new StartButton(startCallback, buttonText)
+    })
     this.push(...this.modeButtons)
 
     this.resize(gameContext)
 
-    this.modeButtons.forEach((button) => {
+    this.modeButtons.forEach((button, index) => {
+      button.opacity = 0
       animator
         .animate(button)
-        .tween({ opacity: { from: 0, to: 1 }, originY: { from: -button.size * .1 }}, 300, animator.easeOutCubic)
+        .wait(index * 100)
+        .tween({ opacity: 1, originY: { from: -button.size * .1 }}, 300, animator.easeOutCubic)
         .start()
     })
   }
 
-  handleStartGame(gameContext, GameClass, selectedButton) {
+  handleStartGame(gameContext, getGameMode, selectedButton) {
     const { animator } = gameContext
 
     const animations = this.modeButtons.map((button) => {
@@ -41,7 +49,7 @@ export default class ModeSelectionScreen extends ViewList {
 
     Promise.all(animations).then(() => {
       gameContext.mainViewList.removeChild(this)
-      gameContext.mainViewList.push(new GameClass(gameContext))
+      gameContext.mainViewList.push(getGameMode())
     })
   }
 
@@ -54,14 +62,17 @@ export default class ModeSelectionScreen extends ViewList {
 
   resize({ width, height }) {
     const buttonSize = Math.min(200, Math.max(width * .3, 150))
-    const buttonSpacing = 20
+    const buttonSpacing = 30
+
+    const cols = 2
 
     this.modeButtons.forEach((button, index) => {
+      const col = index % cols
+      const row = (index - col) / cols
+
       button.size = buttonSize
-
-      button.y = height / 2
-
-      button.x = width / 2 + index * (buttonSize + buttonSpacing) - (buttonSize + buttonSpacing) / 2
+      button.y = height / 2 + row * (buttonSize + buttonSpacing) - (buttonSize + buttonSpacing) / 2
+      button.x = width / 2 + col * (buttonSize + buttonSpacing) - (buttonSize + buttonSpacing) / 2
     })
   }
 }

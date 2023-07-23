@@ -46,10 +46,10 @@ export default class StartButton extends Clickable {
       ctx.textBaseline = "middle"
       ctx.fillStyle = style.textColor
       ;[
-        [-.21,-.2, .5],
-        [.21,-.2, .5],
-        [-.21,.25, .5],
-        [.21,.25, .5],
+        [-.20,-.15, .45],
+        [.20,-.15, .38],
+        [-.20,.23, .31],
+        [.20,.23, .24],
       ].forEach(([offsetX, offsetY, sizeMultiplier], index) => {
         ctx.font = `${this.size * sizeMultiplier}px Arial`;
         ctx.fillText(this.letters[index], offsetX * this.size, offsetY * this.size)

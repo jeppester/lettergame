@@ -8,17 +8,17 @@ import theme from '../../consts/theme.js'
 import ModeSelectionScreen from '../ModeSelectionScreen/ModeSelectionScreen.js'
 
 export default class AlphabeticalModeScreen extends ViewList {
-  constructor(gameContext) {
+  constructor(gameContext, availableLettersString) {
     super()
-    this.startGame(gameContext)
+    this.startGame(gameContext, availableLettersString)
   }
 
-  startGame(gameContext) {
+  startGame(gameContext, availableLettersString) {
     this.empty()
 
     this.padding = 20
     this.letterButtons = new ViewList()
-    this.availableLetters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ"] // .slice(0,5)
+    this.availableLetters = [...availableLettersString] // .slice(0,5)
     this.allLetters = this.availableLetters.slice()
 
     this.letterList = new LetterList()
@@ -165,7 +165,7 @@ export default class AlphabeticalModeScreen extends ViewList {
       playAudio(audioContext, assetLoader.pick('audio', 'failure/before-incorrect'))
         .then(() => animator.wait(300))
         .then(() => Promise.all([
-          playAudio(audioContext, assetLoader.pick('audio', `letters/${button.letter}`)),
+          playAudio(audioContext, assetLoader.pick('audio', `letters/${button.letter.toLocaleUpperCase()}`)),
           animator
             .animate(button)
             .wait(200)
@@ -224,7 +224,7 @@ export default class AlphabeticalModeScreen extends ViewList {
       this.playCurrentLetter(gameContext)
     })
 
-    return playAudio(audioContext, assetLoader.pick('audio', `letters/${this.availableLetters[0]}`))
+    return playAudio(audioContext, assetLoader.pick('audio', `letters/${this.availableLetters[0].toLocaleUpperCase()}`))
   }
 
   cancelLetterPlaybackTimer({ animator }) {

@@ -8,17 +8,17 @@ import theme from '../../consts/theme.js'
 import ModeSelectionScreen from '../ModeSelectionScreen/ModeSelectionScreen.js'
 
 export default class RandomModeScreen extends ViewList {
-  constructor(gameContext) {
+  constructor(gameContext, availableLettersString) {
     super()
-    this.startGame(gameContext)
+    this.startGame(gameContext, availableLettersString)
   }
 
-  startGame(gameContext) {
+  startGame(gameContext, availableLettersString) {
     this.empty()
 
     this.padding = 20
     this.letterButtons = new ViewList()
-    this.availableLetters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ"] // .slice(0,5)
+    this.availableLetters = [...availableLettersString] // .slice(0,5)
 
     this.letterList = new LetterList(this.availableLetters.slice())
     this.trophy = new Trophy(gameContext, this.availableLetters.length)
@@ -177,7 +177,7 @@ export default class RandomModeScreen extends ViewList {
       playAudio(audioContext, assetLoader.pick('audio', 'failure/before-incorrect'))
         .then(() => animator.wait(300))
         .then(() => Promise.all([
-          playAudio(audioContext, assetLoader.pick('audio', `letters/${button.letter}`)),
+          playAudio(audioContext, assetLoader.pick('audio', `letters/${button.letter.toLocaleUpperCase()}`)),
           animator
             .animate(button)
             .wait(200)
@@ -223,7 +223,7 @@ export default class RandomModeScreen extends ViewList {
       this.playCurrentLetter(gameContext)
     })
 
-    return playAudio(audioContext, assetLoader.pick('audio', `letters/${this.correctLetter}`))
+    return playAudio(audioContext, assetLoader.pick('audio', `letters/${this.correctLetter.toLocaleUpperCase()}`))
   }
 
   cancelLetterPlaybackTimer({ animator }) {
