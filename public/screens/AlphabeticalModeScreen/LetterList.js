@@ -18,7 +18,7 @@ export default class LetterList extends ViewList {
       .animator
       .animate(newLetter)
       .tween({
-        opacity: { from: 0, to: 1 }
+        opacity: { from: 0 }
       })
       .start()
 
