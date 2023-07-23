@@ -160,7 +160,7 @@ export default class RandomModeScreen extends ViewList {
         otherButton.state = "muted"
       }
     })
-    this.moveToFront(button)
+    this.letterButtons.moveToFront(button)
     button.state = "incorrect"
 
     await Promise.all([
