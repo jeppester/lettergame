@@ -175,7 +175,7 @@ export default class RandomModeScreen extends ViewList {
         .tween({ scaleX: 1.5, scaleY: 1.5 }, 500, animator.easeInOutCubic)
         .start(),
       playAudio(audioContext, assetLoader.pick('audio', 'failure/before-incorrect'))
-        .then(() => animator.delay(300))
+        .then(() => animator.wait(300))
         .then(() => Promise.all([
           playAudio(audioContext, assetLoader.pick('audio', `letters/${button.letter}`)),
           animator
@@ -186,7 +186,7 @@ export default class RandomModeScreen extends ViewList {
             .tween({ originX: 0, originY: 0 }, 50)
             .start(),
         ]))
-        .then(() => animator.delay(300))
+        .then(() => animator.wait(300))
         .then(() => playAudio(audioContext, assetLoader.pick('audio', 'failure/before-correct')))
     ])
 
@@ -210,7 +210,7 @@ export default class RandomModeScreen extends ViewList {
     this.correctLetter = currentLetters[Math.floor(Math.random() * currentLetters.length)]
     console.log(this.correctLetter)
 
-    this.letterPlaybackTimer = gameContext.animator.delay(300).then(() => {
+    this.letterPlaybackTimer = gameContext.animator.wait(300).then(() => {
       this.playCurrentLetter(gameContext)
     })
   }
@@ -219,7 +219,7 @@ export default class RandomModeScreen extends ViewList {
     const { audioContext, animator, assetLoader } = gameContext
 
     this.cancelLetterPlaybackTimer(gameContext)
-    this.letterPlaybackTimer = animator.delay(10000, 'current-letter-payback').then(() => {
+    this.letterPlaybackTimer = animator.wait(10000, 'current-letter-payback').then(() => {
       this.playCurrentLetter(gameContext)
     })
 

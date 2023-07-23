@@ -167,7 +167,7 @@ export default class Trophy extends ViewList {
         y: 0,
       }, duration, animator.easeInOutCubic)
       .start(),
-    await animator.delay(600)
+    await animator.wait(600)
   }
 
   async animateOut(gameContext) {
@@ -180,7 +180,7 @@ export default class Trophy extends ViewList {
     .tween(this.getMinifiedProps(gameContext), duration, animator.easeInOutCubic)
     .start(),
 
-    await animator.delay(200)
+    await animator.wait(200)
   }
 
   handleEvent({ gameContext, event }) {

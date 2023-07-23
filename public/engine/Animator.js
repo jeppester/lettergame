@@ -10,7 +10,7 @@ export default class Animator {
     return new AnimationBuilder(this, target)
   }
 
-  delay(duration, key) {
+  wait(duration, key) {
     return new Promise(res => {
       const animation = {
         key,
