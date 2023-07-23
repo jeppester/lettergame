@@ -238,6 +238,7 @@ export default class AlphabeticalModeScreen extends ViewList {
     await animator
       .animate(this)
       .tween({ [isLandscape ? 'scaleX' : 'scaleY']: 0 }, 400, animator.easeInCubic)
+      .wait(200)
       .start()
 
     gameContext.mainViewList.removeChild(this)

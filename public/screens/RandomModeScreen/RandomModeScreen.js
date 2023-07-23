@@ -230,7 +230,16 @@ export default class RandomModeScreen extends ViewList {
     animator.cancelKey('current-letter-payback')
   }
 
-  endGame(gameContext) {
+  async endGame(gameContext) {
+    const { animator, width, height } = gameContext
+    const isLandscape = width > height
+
+    await animator
+      .animate(this)
+      .tween({ [isLandscape ? 'scaleX' : 'scaleY']: 0 }, 400, animator.easeInCubic)
+      .wait(200)
+      .start()
+
     gameContext.mainViewList.removeChild(this)
     gameContext.mainViewList.push(new ModeSelectionScreen(gameContext))
   }
