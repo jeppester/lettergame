@@ -6,6 +6,7 @@ import spliceRandom from '../../utils/spliceRandom.js'
 import playAudio from '../../utils/playAudio.js'
 import theme from '../../consts/theme.js'
 import ModeSelectionScreen from '../ModeSelectionScreen/ModeSelectionScreen.js'
+import { easeInCubic, easeInOutCubic, easeOutCubic } from '../../engine/Tweens.js'
 
 export default class RandomModeScreen extends ViewList {
   constructor(gameContext, availableLettersString) {
@@ -41,7 +42,7 @@ export default class RandomModeScreen extends ViewList {
 
       animator.animate(button)
         .wait(delays[i])
-        .tween({ scaleX: { to: 1 }}, 300, animator.easeOutCubic)
+        .tween({ scaleX: { to: 1 }}, 300, easeOutCubic)
         .start(() => {
           // Pick correct letter, but only once
           if (i === 0) this.pickCorrectLetter(gameContext)
@@ -89,7 +90,7 @@ export default class RandomModeScreen extends ViewList {
           scaleY: emphasizeScale,
           rotation: { from: -360, to: 0 },
           boxScale
-        }, 400, animator.easeInOutCubic)
+        }, 400, easeInOutCubic)
         .start()
     ])
 
@@ -105,7 +106,7 @@ export default class RandomModeScreen extends ViewList {
     await animator
       .animate(button)
       .wait(200)
-      .tween({ opacity: 0, scaleX: 6, scaleY: 6 }, 300, animator.easeOutCubic)
+      .tween({ opacity: 0, scaleX: 6, scaleY: 6 }, 300, easeOutCubic)
       .wait(200)
       .start()
 
@@ -125,7 +126,7 @@ export default class RandomModeScreen extends ViewList {
       button.state = "normal"
 
       await animator.animate(button)
-        .tween({ scaleX: { from: 0, to: 1 }}, 300, animator.easeInOutCubic)
+        .tween({ scaleX: { from: 0, to: 1 }}, 300, easeInOutCubic)
         .start()
     }
     else {
@@ -137,7 +138,7 @@ export default class RandomModeScreen extends ViewList {
       await Promise.all(otherButtons.map((otherButton, i) =>
         animator.animate(otherButton)
           .wait(i * 100)
-          .tween({ scaleX: { to: 1 }}, 300, animator.easeOutCubic)
+          .tween({ scaleX: { to: 1 }}, 300, easeOutCubic)
           .start()
       ))
     }
@@ -172,7 +173,7 @@ export default class RandomModeScreen extends ViewList {
         .start(),
       animator
         .animate(button)
-        .tween({ scaleX: 1.5, scaleY: 1.5 }, 500, animator.easeInOutCubic)
+        .tween({ scaleX: 1.5, scaleY: 1.5 }, 500, easeInOutCubic)
         .start(),
       playAudio(audioContext, assetLoader.pick('audio', 'failure/before-incorrect'))
         .then(() => animator.wait(300))
@@ -196,7 +197,7 @@ export default class RandomModeScreen extends ViewList {
       this.playCurrentLetter(gameContext),
       animator
         .animate(button)
-        .tween({ scaleX: 1, scaleY: 1 }, 500, animator.easeInOutCubic)
+        .tween({ scaleX: 1, scaleY: 1 }, 500, easeInOutCubic)
         .start(),
     ])
     this.letterButtons.map((button) => {
@@ -236,7 +237,7 @@ export default class RandomModeScreen extends ViewList {
 
     await animator
       .animate(this)
-      .tween({ [isLandscape ? 'scaleX' : 'scaleY']: 0 }, 400, animator.easeInCubic)
+      .tween({ [isLandscape ? 'scaleX' : 'scaleY']: 0 }, 400, easeInCubic)
       .wait(200)
       .start()
 

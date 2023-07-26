@@ -1,6 +1,7 @@
 import ViewList from '../../engine/ViewList.js'
 import ImageView from '../../engine/ImageView.js'
 import spliceRandom from '../utils/spliceRandom.js'
+import { easeInCubic, easeInOutCubic, easeOutCubic } from '../engine/Tweens.js'
 
 export default class Trophy extends ViewList {
   constructor(gameContext, letterCount) {
@@ -47,7 +48,7 @@ export default class Trophy extends ViewList {
       .tween({
         opacity: { from: 0, to: 1},
         [this.isLandscape ? 'originY' : 'originX']: { from: -this.size * .5 },
-      }, 500, animator.easeOutCubic)
+      }, 500, easeOutCubic)
       .start()
   }
 
@@ -117,12 +118,12 @@ export default class Trophy extends ViewList {
         x: { from: Math.cos(angle) * distance, to: 0 },
         y: { from: Math.sin(angle) * distance, to: 0 },
         opacity: { from: 0, to: 1 },
-      }, duration, animator.easeInCubic)
+      }, duration, easeInCubic)
       .start()
     await animator
       .animate(this)
-      .tween({ originX: Math.cos(angle) * bounceDist, originY: Math.sin(angle) * bounceDist }, 120, animator.easeOutCubic)
-      .tween({ originX: 0, originY: 0 }, 120, animator.easeInCubic)
+      .tween({ originX: Math.cos(angle) * bounceDist, originY: Math.sin(angle) * bounceDist }, 120, easeOutCubic)
+      .tween({ originX: 0, originY: 0 }, 120, easeInCubic)
       .wait(500)
       .start()
   }
@@ -165,7 +166,7 @@ export default class Trophy extends ViewList {
         scaleY: 1,
         x: 0,
         y: 0,
-      }, duration, animator.easeInOutCubic)
+      }, duration, easeInOutCubic)
       .start(),
     await animator.wait(600)
   }
@@ -177,7 +178,7 @@ export default class Trophy extends ViewList {
 
     await animator
     .animate(this)
-    .tween(this.getMinifiedProps(gameContext), duration, animator.easeInOutCubic)
+    .tween(this.getMinifiedProps(gameContext), duration, easeInOutCubic)
     .start(),
 
     await animator.wait(200)

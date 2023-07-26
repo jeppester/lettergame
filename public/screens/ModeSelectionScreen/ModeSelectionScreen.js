@@ -2,6 +2,7 @@ import ViewList from '../../engine/ViewList.js'
 import RandomModeScreen from '../RandomModeScreen/RandomModeScreen.js'
 import AlphabeticalModeScreen from '../AlphabeticalModeScreen/AlphabeticalModeScreen.js'
 import StartButton from './StartButton.js'
+import { easeOutCubic } from '../../engine/Tweens.js'
 
 export default class ModeSelectionScreen extends ViewList {
   constructor(gameContext) {
@@ -29,7 +30,7 @@ export default class ModeSelectionScreen extends ViewList {
       animator
         .animate(button)
         .wait(index * 100)
-        .tween({ opacity: 1, originY: { from: -button.size * .1 }}, 300, animator.easeOutCubic)
+        .tween({ opacity: 1, originY: { from: -button.size * .1 }}, 300, easeOutCubic)
         .start()
     })
   }
@@ -42,7 +43,7 @@ export default class ModeSelectionScreen extends ViewList {
 
       return animator
         .animate(button)
-        .tween({ scaleX: selectedMode ? 1.5 : 1, scaleY: selectedMode ? 1.5 : 1, opacity: 0 }, 400, animator.easeOutCubic)
+        .tween({ scaleX: selectedMode ? 1.5 : 1, scaleY: selectedMode ? 1.5 : 1, opacity: 0 }, 400, easeOutCubic)
         .wait(500)
         .start()
     })

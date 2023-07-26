@@ -21,26 +21,6 @@ export default class Animator {
     })
   }
 
-  easeLinear(t) {
-    return t
-  }
-
-  easeInOutSine(t) {
-    return -(Math.cos(Math.PI * t) - 1) / 2;
-  }
-
-  easeInCubic(t) {
-    return t * t * t;
-  }
-
-  easeOutCubic(t) {
-    return 1 - Math.pow(1 - t, 3);
-  }
-
-  easeInOutCubic(t) {
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  }
-
   cancel(tween) {
     this.tweens = this.tweens.filter(other => other !== tween)
   }
@@ -67,9 +47,6 @@ export default class Animator {
           }
         })
       }
-
-      // Set default easing function
-      if (!tween.ease) tween.ease = this.easeLinear
     })
 
     this.tweens.push(...tweens)
@@ -83,7 +60,7 @@ export default class Animator {
       // Update all values
       const aDT = this.time - tween.startTime
       const t = Math.min(aDT / tween.duration, 1)
-      const tEased = tween.ease(t)
+      const tEased = tween.ease ? tween.ease(t) : t
 
       if (typeof tween.values === 'function') {
         const values = tween.values(tEased)

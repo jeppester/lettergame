@@ -1,5 +1,6 @@
 import Clickable from '../../engine/Clickable.js'
 import theme from '../../consts/theme.js'
+import { easeInOutSine } from '../../engine/Tweens.js'
 
 export default class StartButton extends Clickable {
   constructor(onClick, letters) {
@@ -63,7 +64,7 @@ export default class StartButton extends Clickable {
             .tween(
               { originY: { to: this.isDown ? -this.size * 0.02 : 0 } },
               50,
-              gameContext.animator.easeInOutSine
+              easeInOutSine
             )
             .start()
   }

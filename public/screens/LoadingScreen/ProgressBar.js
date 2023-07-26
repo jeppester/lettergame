@@ -1,3 +1,4 @@
+import { easeOutCubic } from '../../engine/Tweens.js'
 import View from '../../engine/View.js'
 
 export default class ProgressBar extends View {
@@ -18,7 +19,7 @@ export default class ProgressBar extends View {
 
     animator
       .animate(this)
-      .tween({ animatedPercentage: { to: percentage } }, 200, animator.easeOutCubic)
+      .tween({ animatedPercentage: { to: percentage } }, 200, easeOutCubic)
       .start(this.onAnimationDone.bind(this))
   }
 
