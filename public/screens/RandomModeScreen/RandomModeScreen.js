@@ -148,7 +148,24 @@ export default class RandomModeScreen extends ViewList {
       this.letterButtons.map((button) => button.disabled = false)
     }
     else {
-      this.trophy.celebrate(gameContext, () => this.endGame(gameContext))
+      this.trophy.celebrate(gameContext)
+      this.letterList.celebrate(gameContext)
+
+      const restartButton = new LetterButton({ letter: "→", onClick: () => this.endGame(gameContext) })
+
+      restartButton.opacity = 0
+      restartButton.size = this.trophy.size * .2
+      restartButton.updateTextOffset(gameContext)
+      restartButton.x = 0
+      restartButton.y = height / 2 - restartButton.size - 20
+      this.push(restartButton)
+
+      animator
+          .animate(restartButton)
+          .wait(2000)
+          .tween({ opacity: 1, originY: { from: -restartButton.size * .5 }}, 2000, easeOutCubic)
+          .start()
+
     }
   }
 
@@ -232,12 +249,11 @@ export default class RandomModeScreen extends ViewList {
   }
 
   async endGame(gameContext) {
-    const { animator, width, height } = gameContext
-    const isLandscape = width > height
+    const { animator } = gameContext
 
     await animator
       .animate(this)
-      .tween({ [isLandscape ? 'scaleX' : 'scaleY']: 0 }, 400, easeInCubic)
+      .tween({ scaleX: 0 }, 400, easeInCubic)
       .wait(200)
       .start()
 

@@ -2,6 +2,7 @@ import ViewList from '../../engine/ViewList.js'
 import ImageView from '../../engine/ImageView.js'
 import spliceRandom from '../utils/spliceRandom.js'
 import { easeInCubic, easeInOutCubic, easeOutCubic } from '../engine/Tweens.js'
+import LetterButton from './LetterButton.js'
 
 export default class Trophy extends ViewList {
   constructor(gameContext, letterCount) {
@@ -72,7 +73,7 @@ export default class Trophy extends ViewList {
     return finished
   }
 
-  async celebrate(gameContext, callback) {
+  async celebrate(gameContext) {
     const { animator } = gameContext
 
     const distX = this.size * .06
@@ -95,10 +96,8 @@ export default class Trophy extends ViewList {
             rotation: rotation * wiggleInT,
           }
         }, 4000)
-        .loop(2)
+        .loop()
     ])
-
-    callback()
   }
 
   async awardPiece(gameContext) {
