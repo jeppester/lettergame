@@ -31,7 +31,7 @@ const mainLoop = (currentTime) => {
   gameContext.dT = currentTime - lastTime
   lastTime = currentTime
 
-  if (gameContext.dT < 100) { // Don't update anything if dT is too large (because of lost focus)
+  if (gameContext.dT < 500) { // Don't update anything if dT is too large (because of lost focus)
     mainViewList.update(gameContext)
     gameContext.animator.update(gameContext)
   }

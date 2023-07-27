@@ -19,7 +19,7 @@ export default class AlphabeticalModeScreen extends ViewList {
 
     this.padding = 20
     this.letterButtons = new ViewList()
-    this.availableLetters = [...availableLettersString] // .slice(0,5)
+    this.availableLetters = [...availableLettersString].slice(0,5)
     this.allLetters = this.availableLetters.slice()
 
     this.letterList = new LetterList()

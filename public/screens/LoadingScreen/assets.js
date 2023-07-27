@@ -1,11 +1,11 @@
 export default {
   images: {
-    "trophy1": "/images/trophy1.svg",
-    "trophy2": "/images/trophy2.svg",
-    "trophy3": "/images/trophy3.svg",
-    "trophy4": "/images/trophy4.svg",
-    "trophy5": "/images/trophy5.svg",
-    "trophy-silhouette": "/images/trophy-silhouette.svg",
+    "trophy1": "/images/trophy1.png",
+    "trophy2": "/images/trophy2.png",
+    "trophy3": "/images/trophy3.png",
+    "trophy4": "/images/trophy4.png",
+    "trophy5": "/images/trophy5.png",
+    "trophy-silhouette": "/images/trophy-silhouette.png",
   },
   audio: {
     "letters/A1": "/audio/letters/A1.mp3",
