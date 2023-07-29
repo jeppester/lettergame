@@ -85,6 +85,8 @@ export default class Trophy extends ViewList {
   async celebrate(gameContext) {
     const { animator } = gameContext
 
+    const shouldRotate = !navigator.userAgent.includes('Firefox')
+
     const distX = this.size * .06
     const distY = this.size * .04
     let wiggleInT = 0
@@ -102,7 +104,7 @@ export default class Trophy extends ViewList {
           return {
             originX: Math.cos(rotationX) * distX * wiggleInT,
             originY: Math.sin(rotationY) * distY * wiggleInT,
-            rotation: rotation * wiggleInT,
+            rotation: shouldRotate ? rotation * wiggleInT : 0,
           }
         }, 4000)
         .loop()
