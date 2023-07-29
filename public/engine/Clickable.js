@@ -32,55 +32,58 @@ export default class Clickable extends View {
   handlePointerDown(gameContext, event) {
     if (this.clickInProgress || this.disabled) return
 
-    const { ctx } = gameContext
+    const { ctx, scale } = gameContext
     const boundingBox = new Path2D()
 
+    ctx.save()
     ctx.setTransform(this.currentTransform)
     this.setBoundingBoxPath(gameContext, boundingBox)
 
-    if (ctx.isPointInPath(boundingBox, event.x, event.y)) {
+    if (ctx.isPointInPath(boundingBox, event.x * scale, event.y * scale)) {
       this.clickInProgress = true
       this.isDown = true
       this.pointerId = event.pointerId
       this.handleDownStateChange?.call(this, gameContext, event)
     }
-    ctx.resetTransform()
+    ctx.restore()
   }
 
   handlePointerMove(gameContext, event) {
     if (!this.clickInProgress) return
     if (event.pointerId !== this.pointerId) return
 
-    const { ctx } = gameContext
+    const { ctx, scale } = gameContext
     const boundingBox = new Path2D()
 
+    ctx.save()
     ctx.setTransform(this.currentTransform)
     this.setBoundingBoxPath(gameContext, boundingBox)
 
-    const wasHit = ctx.isPointInPath(boundingBox, event.x, event.y)
+    const wasHit = ctx.isPointInPath(boundingBox, event.x * scale, event.y * scale)
     if (wasHit !== this.isDown) {
       this.isDown = wasHit
       this.handleDownStateChange?.call(this, gameContext, event)
     }
-    ctx.resetTransform()
+    ctx.restore()
   }
 
   handlePointerUp(gameContext, event) {
     if (!this.clickInProgress) return
     if (event.pointerId !== this.pointerId) return
 
-    const { ctx } = gameContext
+    const { ctx, scale } = gameContext
     this.clickInProgress = false
     this.isDown = false
     this.pointerId = null
 
     const boundingBox = new Path2D()
 
+    ctx.save()
     ctx.setTransform(this.currentTransform)
     this.setBoundingBoxPath(gameContext, boundingBox)
 
-    const wasClicked = ctx.isPointInPath(boundingBox, event.x, event.y)
-    ctx.resetTransform()
+    const wasClicked = ctx.isPointInPath(boundingBox, event.x * scale, event.y * scale)
+    ctx.restore()
 
     this.handleDownStateChange?.call(this, gameContext, event)
     if (wasClicked && !this.disabled) {
