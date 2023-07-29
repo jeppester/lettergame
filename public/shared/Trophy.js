@@ -2,7 +2,6 @@ import ViewList from '../../engine/ViewList.js'
 import ImageView from '../../engine/ImageView.js'
 import spliceRandom from '../utils/spliceRandom.js'
 import { easeInCubic, easeInOutCubic, easeOutCubic } from '../engine/Tweens.js'
-import LetterButton from './LetterButton.js'
 
 export default class Trophy extends ViewList {
   constructor(gameContext, letterCount) {
@@ -25,7 +24,17 @@ export default class Trophy extends ViewList {
     window.trophy = this
     window.gameContext = gameContext
 
-    this.background = new ImageView(assetLoader.images[`trophy-silhouette`], { width: this.size })
+    const silhouette = assetLoader.images[`trophy-silhouette`]
+    const cacheCanvas = document.createElement('canvas')
+    cacheCanvas.width = this.size * gameContext.scale
+    cacheCanvas.height = Math.ceil(silhouette.height / silhouette.width * cacheCanvas.width)
+    const cacheCanvasContext = cacheCanvas.getContext('2d')
+    cacheCanvasContext.drawImage(silhouette, 0, 0, cacheCanvas.width, cacheCanvas.height)
+
+    this.cacheCanvas = cacheCanvas
+    this.cacheCanvasContext = cacheCanvasContext
+
+    this.background = new ImageView(this.cacheCanvas, { width: this.size })
     this.background.originXFraction = .5
     this.background.originYFraction = .5
 
@@ -39,7 +48,7 @@ export default class Trophy extends ViewList {
       return view
     })
 
-    this.push(this.background,...this.pieces)
+    this.push(this.background)
 
     this.inactivePieces = this.pieces.slice()
     this.activePieces = []
@@ -105,7 +114,7 @@ export default class Trophy extends ViewList {
 
     const newPiece = spliceRandom(this.inactivePieces)
     this.activePieces.push(newPiece)
-    newPiece.opacity = 1
+    this.push(newPiece)
     const angle = this.getPieceAngle(this.pieces.indexOf(newPiece))
     const distance = this.size * .3
     const bounceDist = this.size * .02
@@ -125,6 +134,9 @@ export default class Trophy extends ViewList {
       .tween({ originX: 0, originY: 0 }, 120, easeInCubic)
       .wait(500)
       .start()
+
+    this.cacheCanvasContext.drawImage(newPiece.image, 0, 0, this.cacheCanvas.width, this.cacheCanvas.height)
+    this.removeChild(newPiece)
   }
 
   getPieceAngle(index) {
