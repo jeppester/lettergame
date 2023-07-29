@@ -36,6 +36,7 @@ export default class ModeSelectionScreen extends ViewList {
   }
 
   handleStartGame(gameContext, getGameMode, selectedButton) {
+    this.modeButtons.forEach(button => button.disabled = true)
     const { animator } = gameContext
 
     const animations = this.modeButtons.map((button) => {
