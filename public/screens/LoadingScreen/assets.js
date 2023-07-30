@@ -136,5 +136,10 @@ export default {
     "failure/before-incorrect/ih-for-hulen-det-var-et.mp3": "/audio/failure/before-incorrect/ih-for-hulen-det-var-et.mp3",
     "failure/before-incorrect/ih-for-snoevsen-da-det-var-et.mp3": "/audio/failure/before-incorrect/ih-for-snoevsen-da-det-var-et.mp3",
     "failure/before-incorrect/oev-det-var-et.mp3": "/audio/failure/before-incorrect/oev-det-var-et.mp3",
+    "trophy/cling1": "audio/trophy/cling1.mp3",
+    "trophy/cling2": "audio/trophy/cling2.mp3",
+    "trophy/cling3": "audio/trophy/cling3.mp3",
+    "trophy/cling4": "audio/trophy/cling4.mp3",
+    "trophy/cling5": "audio/trophy/cling5.mp3",
   }
 }

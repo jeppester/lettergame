@@ -2,6 +2,7 @@ import ViewList from '../../engine/ViewList.js'
 import ImageView from '../../engine/ImageView.js'
 import spliceRandom from '../utils/spliceRandom.js'
 import { easeInCubic, easeInOutCubic, easeOutCubic } from '../engine/Tweens.js'
+import playAudio from '../utils/playAudio.js'
 
 export default class Trophy extends ViewList {
   constructor(gameContext, letterCount) {
@@ -112,7 +113,7 @@ export default class Trophy extends ViewList {
   }
 
   async awardPiece(gameContext) {
-    const { animator } = gameContext
+    const { animator, audioContext, assetLoader } = gameContext
 
     const newPiece = spliceRandom(this.inactivePieces)
     this.activePieces.push(newPiece)
@@ -122,14 +123,24 @@ export default class Trophy extends ViewList {
     const bounceDist = this.size * .02
     const duration = 200
 
-    await animator
-      .animate(newPiece)
-      .tween({
-        x: { from: Math.cos(angle) * distance, to: 0 },
-        y: { from: Math.sin(angle) * distance, to: 0 },
-        opacity: { from: 0, to: 1 },
-      }, duration, easeInCubic)
-      .start()
+    await Promise.all([
+      animator
+        .animate(newPiece)
+        .tween({
+          x: { from: Math.cos(angle) * distance, to: 0 },
+          y: { from: Math.sin(angle) * distance, to: 0 },
+          opacity: { from: 0, to: 1 },
+        }, duration, easeInCubic)
+        .start(),
+      animator
+        .wait(duration - 100) // The impact sound has a short amount of silence before it starts
+        .then(() => {
+          // On purpose we don't return the result of the playAudio call.
+          // We don't want the impact animation to wait until after the sfx has finished
+          playAudio(audioContext, assetLoader.pick('audio', 'trophy/cling'))
+        }),
+    ])
+
     await animator
       .animate(this)
       .tween({ originX: Math.cos(angle) * bounceDist, originY: Math.sin(angle) * bounceDist }, 120, easeOutCubic)
