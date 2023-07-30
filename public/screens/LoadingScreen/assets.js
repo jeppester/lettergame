@@ -8,6 +8,10 @@ export default {
     "trophy-silhouette": "/images/trophy-silhouette.png",
   },
   audio: {
+    "button/bop1": "/audio/button/bop1.mp3",
+    "button/bop2": "/audio/button/bop2.mp3",
+    "button/bop3": "/audio/button/bop3.mp3",
+    "button/bop4": "/audio/button/bop4.mp3",
     "letters/A1": "/audio/letters/A1.mp3",
     "letters/A2": "/audio/letters/A2.mp3",
     "letters/B1": "/audio/letters/B1.mp3",

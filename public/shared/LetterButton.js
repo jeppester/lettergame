@@ -1,6 +1,7 @@
 import Clickable from '../../engine/Clickable.js'
 import theme from '../../consts/theme.js'
 import { easeInOutSine } from '../engine/Tweens.js'
+import playAudio from '../utils/playAudio.js'
 
 export default class LetterButton extends Clickable {
   constructor({ letter, onClick, position }) {
@@ -80,7 +81,8 @@ export default class LetterButton extends Clickable {
             .start()
   }
 
-  handleClick() {
+  handleClick(gameContext) {
+    playAudio(gameContext.audioContext, gameContext.assetLoader.pick('audio', 'button/bop'))
     this.onClick(this)
   }
 }
