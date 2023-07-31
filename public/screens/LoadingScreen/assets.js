@@ -8,6 +8,7 @@ export default {
     "trophy-silhouette": "/images/trophy-silhouette.png",
   },
   audio: {
+    "ost": "/audio/ost.mp3",
     "button/bop1": "/audio/button/bop1.mp3",
     "button/bop2": "/audio/button/bop2.mp3",
     "button/bop3": "/audio/button/bop3.mp3",

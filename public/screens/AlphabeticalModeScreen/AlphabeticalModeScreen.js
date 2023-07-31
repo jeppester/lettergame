@@ -16,6 +16,7 @@ export default class AlphabeticalModeScreen extends ViewList {
 
   startGame(gameContext, availableLettersString) {
     this.empty()
+    this.ostPlayback = playAudio(gameContext.audioContext, gameContext.assetLoader.pick('audio', 'ost'), .3, true)
 
     this.padding = 20
     this.letterButtons = new ViewList()
@@ -259,6 +260,7 @@ export default class AlphabeticalModeScreen extends ViewList {
 
     gameContext.mainViewList.removeChild(this)
     gameContext.mainViewList.push(new ModeSelectionScreen(gameContext))
+    this.ostPlayback.cancel()
   }
 
   resize(gameContext) {
