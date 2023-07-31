@@ -88,7 +88,6 @@ export default {
     "success/huh-ra": "/audio/success/huh-ra.mp3",
     "success/hurra": "/audio/success/hurra.mp3",
     "success/mega-fedt": "/audio/success/mega-fedt.mp3",
-    "success/nu-vinder-du-en-pokal": "/audio/success/nu-vinder-du-en-pokal.mp3",
     "success/sejest": "/audio/success/sejest.mp3",
     "success/sejt-manner": "/audio/success/sejt-manner.mp3",
     "success/succes": "/audio/success/succes.mp3",
@@ -146,5 +145,6 @@ export default {
     "trophy/cling3": "audio/trophy/cling3.mp3",
     "trophy/cling4": "audio/trophy/cling4.mp3",
     "trophy/cling5": "audio/trophy/cling5.mp3",
+    "trophy/in/nu-vinder-du-en-pokal": "/audio/trophy/in/nu-vinder-du-en-pokal.mp3",
   }
 }
