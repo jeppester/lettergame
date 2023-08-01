@@ -85,7 +85,7 @@ export default class LetterList extends ViewList {
     const letterSpacingRad = 2 * Math.PI / totalLetters
     const letterSpacing = radius * letterSpacingRad
     let firstLetterVelocity
-    const inDuration = 1500
+    const inDuration = 2500
 
     // Make letters follow their predecessor by constraining the distance between them
     const updateChain = (letters) => {
@@ -123,7 +123,7 @@ export default class LetterList extends ViewList {
         const distanceT = easeInOutSine(t)
         const angleT = easeInSine(t)
 
-        const angle = initialAngle + angleT * Math.PI / 2
+        const angle = initialAngle + angleT * Math.PI
         const distanceD = (radius - initialDistance) * distanceT
         const distance = initialDistance + distanceD
         const centerX = Math.cos(angle) * distance
@@ -139,14 +139,14 @@ export default class LetterList extends ViewList {
       }, inDuration)
       .start()
 
-    const endSpeedDerivative = Math.PI * Math.sin(Math.PI * 1 / 2) / 2
+    const endSpeedDerivative = Math.PI * Math.sin(Math.PI * 1 / 2)
     const rotationTime =  inDuration / endSpeedDerivative * 4
 
     // Animate the first letter around the circle, with and (offset by a quarter of a circle)
     await animator
       .animate(this)
       .tween(t => {
-        const angle = initialAngle + t * 2 * Math.PI + Math.PI / 2
+        const angle = initialAngle + t * 2 * Math.PI + Math.PI
         const centerX = Math.cos(angle) * radius
         const centerY = Math.sin(angle) * radius
         const firstLetterNextX = centerX - this.x
