@@ -181,7 +181,7 @@ export default class Trophy extends ViewList {
   async animateIn(gameContext) {
     const { animator, audioContext, assetLoader } = gameContext
 
-    const duration = 600
+    const duration = 900
 
     playAudio(audioContext, assetLoader.pick('audio', 'trophy/in'))
 
@@ -200,7 +200,7 @@ export default class Trophy extends ViewList {
   async animateOut(gameContext) {
     const { animator } = gameContext
 
-    const duration = 600
+    const duration = 900
 
     await animator
     .animate(this)
