@@ -23,7 +23,9 @@ export default class View {
 
     this.currentTransform = ctx.getTransform();
 
-    drawWithTransform()
+    if (drawWithTransform) {
+      drawWithTransform()
+    }
 
     ctx.restore()
   }
