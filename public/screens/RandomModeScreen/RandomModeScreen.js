@@ -7,6 +7,7 @@ import playAudio from '../../utils/playAudio.js'
 import theme from '../../consts/theme.js'
 import ModeSelectionScreen from '../ModeSelectionScreen/ModeSelectionScreen.js'
 import { easeInCubic, easeInOutCubic, easeOutCubic } from '../../engine/Tweens.js'
+import Clickable from '../../engine/Clickable.js'
 
 export default class RandomModeScreen extends ViewList {
   constructor(gameContext, availableLettersString) {
@@ -152,21 +153,15 @@ export default class RandomModeScreen extends ViewList {
       this.trophy.celebrate(gameContext)
       this.letterList.celebrate(gameContext)
 
-      const restartButton = new LetterButton({ letter: "→", onClick: () => this.endGame(gameContext) })
-
-      restartButton.opacity = 0
-      restartButton.size = this.trophy.size * .2
-      restartButton.updateTextOffset(gameContext)
-      restartButton.x = 0
-      restartButton.y = height / 2 - restartButton.size - 20
-      this.push(restartButton)
-
-      animator
-          .animate(restartButton)
-          .wait(2000)
-          .tween({ opacity: 1, originY: { from: -restartButton.size * .5 }}, 2000, easeOutCubic)
-          .start()
-
+      const fullScreenButton = new Clickable()
+      fullScreenButton.setBoundingBoxPath = (_gameContext, boundingBox) => {
+        boundingBox.rect(-width / 2, -height / 2, width, height)
+      }
+      fullScreenButton.handleClick = () => {
+        fullScreenButton.disabled = true
+        this.endGame(gameContext)
+      }
+      this.push(fullScreenButton)
     }
   }
 
