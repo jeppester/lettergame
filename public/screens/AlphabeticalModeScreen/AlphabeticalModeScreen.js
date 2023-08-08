@@ -147,6 +147,7 @@ export default class AlphabeticalModeScreen extends ViewList {
       }
       fullScreenButton.handleClick = () => {
         fullScreenButton.disabled = true
+        playAudio(audioContext, assetLoader.pick('audio', 'trophy/cling'))
         this.endGame(gameContext)
       }
       this.push(fullScreenButton)

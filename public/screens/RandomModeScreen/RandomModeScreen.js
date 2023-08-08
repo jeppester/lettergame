@@ -159,6 +159,7 @@ export default class RandomModeScreen extends ViewList {
       }
       fullScreenButton.handleClick = () => {
         fullScreenButton.disabled = true
+        playAudio(audioContext, assetLoader.pick('audio', 'trophy/cling'))
         this.endGame(gameContext)
       }
       this.push(fullScreenButton)
